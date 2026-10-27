@@ -1,0 +1,18 @@
+{
+  "name": "home-management-server",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@fastify/static": "^9.1.3",
+    "better-sqlite3": "^12.11.1",
+    "fastify": "^5.10.0",
+    "web-push": "^3.6.7"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true
+  }
+}

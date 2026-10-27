@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+
+# secrets (server copies .env.example → .env)
+.env
+
+# runtime data volume (SQLite) on the server
+data/
+
+# playwright artifacts
+test-results/
+playwright-report/
+server/public/
