@@ -15,8 +15,8 @@ Owner's requirements (keep honoring these):
 - PWA installed via Safari "Add to Home Screen"; must work offline.
 - Hosted on the owner's private home server, same pattern as `C:\Sandbox\Tracker`
   (one Docker container, SQLite volume, HTTPS via `tailscale serve`, tailnet-only).
-- **Port is intentionally unset.** The owner will supply it; it goes in `.env` as
-  `APP_PORT`. `docker-compose.yml` refuses to start without it. Don't hard-code one.
+- **Host port is 40001** (owner's choice): `APP_PORT` in `.env`, defaulted in
+  `docker-compose.yml` and `.env.example`. The container listens on 8080 internally.
 - GitHub repo `home-management` is **private**.
 
 ## Commands

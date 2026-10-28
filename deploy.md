@@ -1,8 +1,8 @@
 # Deploy runbook — home Linux server (tailnet-only)
 
 One Docker container serves the API **and** the built PWA, and sends push
-reminders. The host port is set by `APP_PORT` in `.env` — **there is no default;
-you must set it** (the container always listens on 8080 internally). HTTPS
+reminders. The host port is **40001** (`APP_PORT` in `.env`; the container
+always listens on 8080 internally). HTTPS
 (mandatory for iOS PWA install, the service worker, and Web Push) is provided at
 the host level by `tailscale serve`, tailnet-only — **no Funnel, nothing public**.
 
@@ -22,7 +22,7 @@ git clone https://github.com/TanayaBhave/home-management.git && cd home-manageme
 
 cp .env.example .env
 openssl rand -base64 32     # → paste as SYNC_TOKEN in .env
-$EDITOR .env                # set APP_PORT (required) and SYNC_TOKEN.
+$EDITOR .env                # set SYNC_TOKEN (APP_PORT is already 40001).
                             # VAPID_* can stay empty — keys are generated on first start.
 ```
 
@@ -30,29 +30,28 @@ $EDITOR .env                # set APP_PORT (required) and SYNC_TOKEN.
 
 ```bash
 docker compose up -d --build
-curl http://localhost:<APP_PORT>/api/health   # expect {"ok":true,...}
-docker compose logs -f app                    # if anything looks off
+curl http://localhost:40001/api/health   # expect {"ok":true,...}
+docker compose logs -f app               # if anything looks off
 ```
 
-If compose says `Set APP_PORT in .env`, you haven't filled in the port yet.
 The SQLite database lands in `./data/home.sqlite` (bind mount) and survives
 rebuilds and restarts. The push (VAPID) keys are stored inside it too.
 
 ## 4. HTTPS via tailscale serve (tailnet-only)
 
 ```bash
-tailscale serve --bg localhost:<APP_PORT>
+tailscale serve --bg localhost:40001
 tailscale serve status        # shows https://<hostname>.<tailnet>.ts.net/ → proxy
 ```
 
 This terminates TLS with a real certificate and forwards HTTPS :443 →
-`http://localhost:<APP_PORT>`, visible **only inside your tailnet**. `--bg` keeps
+`http://localhost:40001`, visible **only inside your tailnet**. `--bg` keeps
 it running across reboots. Permission error → prefix `sudo` (or run
 `tailscale set --operator=$USER` once).
 
 > If :443 on this host is already used by another app (e.g. the Tracker), serve
 > this one on another HTTPS port instead:
-> `tailscale serve --bg --https=8443 localhost:<APP_PORT>` → app URL is
+> `tailscale serve --bg --https=8443 localhost:40001` → app URL is
 > `https://<hostname>.<tailnet>.ts.net:8443`.
 
 Turn off later: `tailscale serve --https=443 off` (or `tailscale serve reset`).
@@ -103,7 +102,6 @@ Copy all three together. For a guaranteed-consistent snapshot:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `docker compose up` errors with `Set APP_PORT in .env` | Port not filled in | Put the port in `.env` as `APP_PORT=` |
 | Sync fails with **401** | Phone token ≠ `SYNC_TOKEN` | Re-paste the token; after editing `.env` run `docker compose up -d` |
 | `curl …/api/health` fails | Container crashed, or port busy | `docker compose ps`, `docker compose logs app`; pick a free `APP_PORT` and re-point tailscale serve |
 | `https://…ts.net` cert warning / timeout | MagicDNS/HTTPS not enabled, or serve not running | Enable both in the admin console; `tailscale serve status` |
