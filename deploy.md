@@ -18,7 +18,7 @@ the host level by `tailscale serve`, tailnet-only — **no Funnel, nothing publi
 ## 2. Get the code + configure
 
 ```bash
-git clone https://github.com/TanayaBhave/home-management.git && cd home-management
+git clone https://github.com/TanayaBhave/Home_Management.git home-management && cd home-management
 
 cp .env.example .env
 openssl rand -base64 32     # → paste as SYNC_TOKEN in .env

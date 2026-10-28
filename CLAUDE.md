@@ -17,7 +17,7 @@ Owner's requirements (keep honoring these):
   (one Docker container, SQLite volume, HTTPS via `tailscale serve`, tailnet-only).
 - **Host port is 40001** (owner's choice): `APP_PORT` in `.env`, defaulted in
   `docker-compose.yml` and `.env.example`. The container listens on 8080 internally.
-- GitHub repo `home-management` is **private**.
+- GitHub repo `TanayaBhave/Home_Management` is **private**.
 
 ## Commands
 
