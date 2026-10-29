@@ -34,7 +34,9 @@ export function ReminderSettings() {
       <div className="section-label">Reminders</div>
       {!supported && (
         <div className="hint" style={{ margin: '0 4px 12px' }}>
-          {isStandalone() ? 'This browser does not support push notifications.'
+          {!window.isSecureContext
+            ? 'Reminders need the app to be opened over HTTPS. Over plain http:// browsers block push notifications.'
+            : isStandalone() ? 'This browser does not support push notifications.'
             : 'On iPhone: Share → Add to Home Screen, then open the app from its icon to turn on reminders.'}
         </div>
       )}

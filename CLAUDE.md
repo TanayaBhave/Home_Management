@@ -14,7 +14,13 @@ Owner's requirements (keep honoring these):
 - Replicate the *concept* of Sweepy for personal use — own code, own server, no third-party accounts.
 - PWA installed via Safari "Add to Home Screen"; must work offline.
 - Hosted on the owner's private home server, same pattern as `C:\Sandbox\Tracker`
-  (one Docker container, SQLite volume, HTTPS via `tailscale serve`, tailnet-only).
+  (one Docker container, SQLite volume, tailnet-only).
+- **Served over plain HTTP at the server's Tailscale IP** (`http://100.x.y.z:40001`) —
+  the owner chose not to use HTTPS. That page is *not* a secure context, so: no
+  service worker (no offline), no Web Push, no `crypto.randomUUID` (see `newId`).
+  Code must keep working without those APIs; push/offline light up only if HTTPS
+  is added later (deploy.md §8: `tailscale serve --https=40443 localhost:40001`,
+  a dedicated port so the server's other apps/ports are untouched).
 - **Host port is 40001** (owner's choice): `APP_PORT` in `.env`, defaulted in
   `docker-compose.yml` and `.env.example`. The container listens on 8080 internally.
 - GitHub repo `TanayaBhave/Home_Management` is **private**.
@@ -70,7 +76,7 @@ sync hub + reminder sender. Same sync design as the Tracker project.
 - Match the existing style: function components, no state library, plain CSS in `src/index.css` with CSS variables (light + `prefers-color-scheme: dark`).
 
 ## iOS PWA notes
-- HTTPS is mandatory (service worker, install, push) → `tailscale serve`.
+- Service worker + push need HTTPS; over the plain-HTTP tailnet URL they're unavailable (Add to Home Screen still works).
 - Web Push on iPhone requires iOS 16.4+ **and** the app opened from the Home Screen icon; permission must be requested from a tap (Settings → Turn on reminders).
 - iOS may evict IndexedDB for un-installed sites; server sync is the durability guarantee.
 
