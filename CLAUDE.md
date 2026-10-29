@@ -19,7 +19,7 @@ Owner's requirements (keep honoring these):
   the owner chose not to use HTTPS. That page is *not* a secure context, so: no
   service worker (no offline), no Web Push, no `crypto.randomUUID` (see `newId`).
   Code must keep working without those APIs; push/offline light up only if HTTPS
-  is added later (deploy.md §8: `tailscale serve --https=40443 localhost:40001`,
+  is added later (deploy.md §8: `tailscale serve --https=50001 localhost:40001`,
   a dedicated port so the server's other apps/ports are untouched).
 - **Host port is 40001** (owner's choice): `APP_PORT` in `.env`, defaulted in
   `docker-compose.yml` and `.env.example`. The container listens on 8080 internally.

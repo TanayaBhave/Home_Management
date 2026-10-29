@@ -103,7 +103,7 @@ Copy all three together. For a guaranteed-consistent snapshot:
 `tailscale serve` only listens on the **one** HTTPS port you give it. Every
 other app/port on this server keeps working exactly as before, and
 `http://<tailscale-ip>:40001` keeps working too. Use a dedicated port
-(**40443** here) so you never collide with another app, including anything on 443.
+(**50001** = APP_PORT + 10000 here) so you never collide with another app, including anything on 443.
 
 One-time: Tailscale admin console → **DNS** → enable MagicDNS **and** HTTPS
 certificates. (This is a tailnet-wide toggle; it doesn't change any existing app.
@@ -113,13 +113,13 @@ only reachable from inside the tailnet.)
 
 ```bash
 tailscale serve status                          # see what's already served; don't reuse those ports
-tailscale serve --bg --https=40443 localhost:40001
-# → https://<hostname>.<tailnet>.ts.net:40443  (tailnet-only; never use `funnel`)
+tailscale serve --bg --https=50001 localhost:40001
+# → https://<hostname>.<tailnet>.ts.net:50001  (tailnet-only; never use `funnel`)
 ```
 
 The HTTPS URL must use the **hostname** (certificates are issued for the
 `.ts.net` name, not the 100.x IP). Find it with `tailscale status` or in
-`tailscale serve status`. To remove it later: `tailscale serve --https=40443 off`.
+`tailscale serve status`. To remove it later: `tailscale serve --https=50001 off`.
 This only removes this one port. Avoid `tailscale serve reset`, which clears
 every serve config on the machine.
 
